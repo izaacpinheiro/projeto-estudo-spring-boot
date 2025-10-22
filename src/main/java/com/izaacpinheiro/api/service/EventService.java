@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.List;
 
@@ -35,10 +34,10 @@ public class EventService {
         return newEvent;
     }
 
-    public List<EventResponseDTO> getEvents(int page, int size){
+    public List<EventResponseDTO> getUpcomingEvents(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        Page<Event> eventsPage = this.repository.findAll(pageable);
-        return eventsPage.map(event -> new EventResponseDTO(event.getId(), event.getTitle(), event.getDescription(), (Data) event.getDate(), "", "", event.getRemote(), event.getEventUrl()))
+        Page<Event> eventsPage = this.repository.findUpcomingEvents(new Date(), pageable);
+        return eventsPage.map(event -> new EventResponseDTO(event.getId(), event.getTitle(), event.getDescription(), event.getDate(), "", "", event.getRemote(), event.getEventUrl()))
                 .stream().toList();
     }
 }
