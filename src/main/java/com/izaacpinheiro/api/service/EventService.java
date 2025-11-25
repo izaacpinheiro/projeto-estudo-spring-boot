@@ -19,6 +19,9 @@ public class EventService {
     @Autowired
     private EventRepository repository;
 
+    @Autowired
+    private AddressService addressService;
+
     public Event createEvent(EventRequestDTO data) {
 
         // Crição do novo evento com as informações passadas pelo usuário
@@ -30,6 +33,11 @@ public class EventService {
         newEvent.setRemote(data.remote());// Conversão do time stamp do front para um Date
 
         repository.save(newEvent);
+
+        // cria uma instância do address do event caso não seja remoto
+        if (!data.remote()){
+            this.addressService.createAddress(data, newEvent);
+        }
 
         return newEvent;
     }
